@@ -1,0 +1,6 @@
+Target dependency graph (3 targets)
+Flutter in Pods
+TensorFlowLiteC in Pods
+tflite in Pods, depends on:
+Flutter in Pods (explicit)
+TensorFlowLiteC in Pods (explicit)

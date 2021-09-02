@@ -1,0 +1,19 @@
+Target dependency graph (7 targets)
+Flutter in Pods
+TensorFlowLiteC in Pods
+camera in Pods, depends on:
+Flutter in Pods (explicit)
+image_picker in Pods, depends on:
+Flutter in Pods (explicit)
+tflite in Pods, depends on:
+Flutter in Pods (explicit)
+TensorFlowLiteC in Pods (explicit)
+tflite_flutter in Pods, depends on:
+Flutter in Pods (explicit)
+Pods-Runner in Pods, depends on:
+Flutter in Pods (explicit)
+TensorFlowLiteC in Pods (explicit)
+camera in Pods (explicit)
+image_picker in Pods (explicit)
+tflite in Pods (explicit)
+tflite_flutter in Pods (explicit)
