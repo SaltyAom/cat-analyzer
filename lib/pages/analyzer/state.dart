@@ -4,7 +4,7 @@ import 'package:cat/services/classification.dart';
 
 import 'package:cat/pages/preview/preview.dart';
 
-class HomePageState extends GetxController {
+class AnalyzerPageState extends GetxController {
   final classifier = ClassifierQuant();
   final previewPage = PreviewPage();
 

@@ -1,7 +1,10 @@
-import 'package:cat/pages/home/state.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cat/pages/analyzer/state.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
 import 'package:get/instance_manager.dart';
+
 import 'package:niku/niku.dart';
 
 import 'package:cat/services/classification.dart';
@@ -23,11 +26,11 @@ class TypeBalloon extends StatelessWidget {
     updateState("Maybe $label");
   }
 
-  String getPrediction(HomePageState state) {
+  String getPrediction(AnalyzerPageState state) {
     final catType = state.catType.value;
     final confidence = state.confidence.value;
 
-    if (confidence < 0.45) return "";
+    if (confidence < 0.55) return "";
     if (confidence > 0.8) return catType;
 
     return "Maybe $catType";
@@ -35,7 +38,7 @@ class TypeBalloon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = Get.find<HomePageState>();
+    final state = Get.find<AnalyzerPageState>();
 
     return Obx(() {
       final catType = getPrediction(state);

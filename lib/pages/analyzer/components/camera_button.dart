@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:get/get.dart';
-import 'package:cat/pages/home/state.dart';
+import 'package:cat/pages/analyzer/state.dart';
 
 import 'package:niku/niku.dart';
 
@@ -17,7 +16,7 @@ class CameraButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = Get.find<HomePageState>();
+    final state = Get.find<AnalyzerPageState>();
     final captureImage = createPickImageHandler(state.requestCaptureImage);
 
     return NikuStack(

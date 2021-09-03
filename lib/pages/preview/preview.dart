@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:cat/pages/home/state.dart';
+import 'package:cat/pages/analyzer/state.dart';
 
 import 'package:niku/niku.dart';
 
 class PreviewPage extends StatelessWidget {
   @override
   build(context) {
-    final state = Get.find<HomePageState>();
+    final state = Get.find<AnalyzerPageState>();
 
     return Scaffold(
       appBar: AppBar(

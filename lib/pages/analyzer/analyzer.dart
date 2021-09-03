@@ -1,19 +1,38 @@
-import 'package:cat/pages/home/state.dart';
 import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
 
 import 'package:niku/niku.dart';
 
-import 'package:cat/pages/home/components/components.dart';
+import './state.dart';
+import './components/components.dart';
 
-class HomePage extends StatelessWidget {
+class AnalyzerPage extends StatelessWidget {
+  final VoidCallback scrollback;
+
+  const AnalyzerPage(
+    this.scrollback, {
+    Key? key,
+  }) : super(key: key);
+
   @override
   build(context) {
-    Get.put(HomePageState());
+    Get.put(AnalyzerPageState());
 
     return Scaffold(
       body: NikuColumn([
         NikuStack([
+          NikuButton.icon(
+            Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+          ).label(Niku()).onPressed(scrollback).rounded().niku()
+            ..builder(
+              (child) => SafeArea(
+                child: child,
+              ),
+            )
+            ..topRight(),
           Camera(),
           CatImagePicker(),
           CameraButton(),

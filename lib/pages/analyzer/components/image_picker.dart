@@ -1,6 +1,7 @@
-import 'package:cat/pages/home/state.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/instance_manager.dart';
+import 'package:cat/pages/analyzer/state.dart';
 
 import 'package:niku/niku.dart';
 
@@ -26,7 +27,7 @@ class CatImagePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = Get.find<HomePageState>();
+    final state = Get.find<AnalyzerPageState>();
     final pickImage = createPickImageHandler(state.takeImage);
 
     return NikuButton(
