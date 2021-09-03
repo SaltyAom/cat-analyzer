@@ -1,7 +1,11 @@
-import 'package:cat/pages/analyzer/analyzer.dart';
 import 'package:flutter/material.dart';
 
+import 'package:cat/pages/analyzer/analyzer.dart';
+import 'package:cat/pages/cat/cat.dart';
+import 'package:cat/pages/profile/profile.dart';
+
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:get/get.dart';
 
 import 'package:niku/niku.dart';
 
@@ -11,7 +15,7 @@ class GalleryPage extends HookWidget {
   @override
   build(context) {
     final controller = useTabController(
-      initialLength: 2,
+      initialLength: 3,
       initialIndex: 1,
     );
 
@@ -25,11 +29,13 @@ class GalleryPage extends HookWidget {
         AnalyzerPage(scrollback),
         Scaffold(
           appBar: AppBar(
-            title: Text("Cat Gallery"),
+            title: Text("Neko Desuyo"),
             centerTitle: false,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  controller.animateTo(0);
+                },
                 icon: Icon(
                   Icons.search,
                 ),
@@ -38,6 +44,9 @@ class GalleryPage extends HookWidget {
                 backgroundColor: Colors.grey.shade300,
               ).niku()
                 ..mr(12)
+                ..on(tap: () {
+                  controller.animateTo(2);
+                })
                 ..builder(
                   (child) => Transform.scale(
                     scale: .9,
@@ -93,12 +102,16 @@ class GalleryPage extends HookWidget {
                     ..p(16)
                 ]),
               ).niku()
-                ..rounded(8);
+                ..rounded(8)
+                ..on(tap: () {
+                  Get.to(CatPage());
+                });
             }),
           ).niku()
             ..px(12)
             ..pt(12),
         ),
+        Profile()
       ],
     );
   }
