@@ -1,0 +1,16 @@
+Target dependency graph (6 targets)
+Flutter in Pods
+camera in Pods, depends on:
+Flutter in Pods (explicit)
+image_picker in Pods, depends on:
+Flutter in Pods (explicit)
+path_provider in Pods, depends on:
+Flutter in Pods (explicit)
+tflite_flutter in Pods, depends on:
+Flutter in Pods (explicit)
+Pods-Runner in Pods, depends on:
+Flutter in Pods (explicit)
+camera in Pods (explicit)
+image_picker in Pods (explicit)
+path_provider in Pods (explicit)
+tflite_flutter in Pods (explicit)
