@@ -46,6 +46,8 @@ class Camera extends HookWidget {
 
         if (camera == null) return null;
 
+        cameraState.value = camera;
+
         state.requestCapture.listen((_) async {
           interval?.cancel();
 
@@ -75,11 +77,8 @@ class Camera extends HookWidget {
             !cameraState.value!.value.isInitialized //
         ) return Niku();
 
-    return useMemoized(
-      () => CameraPreview(cameraState.value!).niku()
-        ..fullSize()
-        ..bg(Colors.black),
-      [cameraState.value],
-    );
+    return CameraPreview(cameraState.value!).niku()
+      ..fullSize()
+      ..bg(Colors.black);
   }
 }

@@ -54,18 +54,15 @@ class PreviewPage extends HookWidget {
         brightness: Brightness.light,
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Form(
             key: formKey,
             child: NikuColumn([
-              Obx(
-                () => NikuColumn([
-                  Image.file(
+              NikuColumn([
+                Obx(
+                  () => Image.file(
                     File(state.image.value),
                   ).niku()
                     ..rounded(8)
@@ -79,7 +76,9 @@ class PreviewPage extends HookWidget {
                     ..maxWidth(560)
                     ..maxHeight(size.height / 2)
                     ..mb(36),
-                  NikuTextField("Cat Name")
+                ),
+                useMemoized(
+                  () => NikuTextField("Cat Name")
                     ..controller(nameController)
                     ..fontSize(18)
                     ..b(InputBorder.none)
@@ -87,51 +86,59 @@ class PreviewPage extends HookWidget {
                       if (value == null || value.isEmpty)
                         return "Cat need a name";
                     }),
-                  NikuTextField("Cat type")
+                  [nameController],
+                ),
+                useMemoized(
+                  () => NikuTextField("Cat type")
                     ..controller(typeController)
                     ..enabled(isCat)
                     ..fontSize(18)
                     ..initial(catType)
                     ..b(InputBorder.none),
-                  NikuRow([
-                    NikuTextField("Age")
+                  [catType, typeController],
+                ),
+                NikuRow([
+                  useMemoized(
+                    () => NikuTextField("Age")
                         .controller(ageController)
                         .phoneKeyboard()
                         .fontSize(18)
                         .b(InputBorder.none)
                         .niku()
                           ..flex(1),
-                    CheckboxListTile(
-                      title: const Text("Owned?"),
-                      value: owned.value,
-                      controlAffinity: ListTileControlAffinity.leading,
-                      onChanged: (value) {
-                        owned.value = value!;
-                      },
-                    ).niku()
-                      ..flex(1),
-                  ]),
-                  if (isCat)
-                    NikuButton.elevated(
-                      NikuRow([
-                        NikuText("Save cat")
-                          ..fontSize(21)
-                          ..w500(),
-                        Icon(Icons.add) //
-                            .niku()
-                            .ml(8),
-                      ])
-                        ..justifyCenter(),
-                    ) //
-                        .onPressed(handleSubmit)
-                        .py(16)
-                        .shadow(Colors.transparent)
-                        .niku()
-                          ..fullWidth()
-                          ..mt(28),
-                ])
-                  ..mb(24),
-              ),
+                    [ageController],
+                  ),
+                  CheckboxListTile(
+                    title: const Text("Owned"),
+                    value: owned.value,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    activeColor: Colors.blue,
+                    onChanged: (value) {
+                      owned.value = value!;
+                    },
+                  ).niku()
+                    ..flex(2),
+                ]),
+                if (isCat)
+                  NikuButton.elevated(
+                    NikuRow([
+                      NikuText("Save cat")
+                        ..fontSize(21)
+                        ..w500(),
+                      Icon(Icons.add) //
+                          .niku()
+                          .ml(8),
+                    ])
+                      ..justifyCenter(),
+                  ) //
+                      .onPressed(handleSubmit)
+                      .py(16)
+                      .shadow(Colors.transparent)
+                      .niku()
+                        ..fullWidth()
+                        ..mt(28),
+              ])
+                ..mb(24),
             ]) //
                 .justifyCenter()
                 .itemsCenter()
