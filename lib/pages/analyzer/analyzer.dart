@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:get/instance_manager.dart';
 
 import 'package:niku/niku.dart';
@@ -18,6 +20,13 @@ class AnalyzerPage extends StatelessWidget {
   build(context) {
     Get.put(AnalyzerPageState());
 
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarBrightness: Brightness.dark,
+      ),
+    );
+
     return Scaffold(
       body: NikuColumn([
         NikuStack([
@@ -26,24 +35,30 @@ class AnalyzerPage extends StatelessWidget {
               Icons.close,
               color: Colors.white,
             ),
-          ).label(Niku()).onPressed(scrollback).rounded().niku()
-            ..builder(
-              (child) => SafeArea(
-                child: child,
-              ),
-            )
-            ..topRight(),
+          ) //
+              .label(Niku())
+              .onPressed(scrollback)
+              .rounded()
+              .niku()
+                ..builder(
+                  (child) => SafeArea(
+                    child: child,
+                  ),
+                )
+                ..topRight(),
           Camera(),
           CatImagePicker(),
           CameraButton(),
           TypeBalloon(),
-          // image.value != ""
-          //     ? SafeArea(
-          //         child: Image.asset(image.value),
-          //       )
-          //     : Niku()
-        ]).niku().bg(Colors.black).expanded()
-      ]).justifyCenter().itemsCenter().niku().fullSize(),
+        ]) //
+            .niku()
+            .bg(Colors.black)
+            .expanded()
+      ]) //
+          .justifyCenter()
+          .itemsCenter()
+          .niku()
+          .fullSize(),
     );
   }
 }

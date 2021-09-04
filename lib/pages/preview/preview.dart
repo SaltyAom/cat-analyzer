@@ -1,16 +1,53 @@
 import 'dart:io';
 
+import 'package:cat/models/cat.dart';
+import 'package:cat/pages/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:get/get.dart';
 import 'package:cat/pages/analyzer/state.dart';
 
 import 'package:niku/niku.dart';
 
-class PreviewPage extends StatelessWidget {
+import 'package:hive/hive.dart';
+
+class PreviewPage extends HookWidget {
   @override
   build(context) {
+    final mediaQuery = MediaQuery.of(context);
+    final size = mediaQuery.size;
+
     final state = Get.find<AnalyzerPageState>();
+    final isCat = state.confidence.value > 0.6;
+    final catType = isCat ? state.catType.value : "Not cat";
+
+    final nameController = useTextEditingController();
+    final typeController = useTextEditingController(text: catType);
+    final ageController = useTextEditingController();
+    final owned = useState(false);
+
+    final formKey = GlobalKey<FormState>();
+
+    final handleSubmit = () async {
+      if (!formKey.currentState!.validate()) return;
+
+      final box = await Hive.openBox<CatModel>('cat');
+
+      box.put(
+        nameController.value.text,
+        CatModel(
+          name: nameController.value.text,
+          type: typeController.value.text,
+          age: int.tryParse(ageController.value.text) ?? 0,
+          owned: owned.value,
+          cover: await File(state.image.value).readAsBytes(),
+        ),
+      );
+
+      state.catType.value = '';
+      Get.offAll(() => HomePage());
+    };
 
     return Scaffold(
       appBar: AppBar(
@@ -21,45 +58,89 @@ class PreviewPage extends StatelessWidget {
           color: Colors.black,
         ),
       ),
-      body: NikuColumn([
-        Obx(() {
-          final isCat = state.confidence.value > 0.6;
-          final catType = isCat ? state.catType.value : "Not cat";
-
-          return NikuColumn([
-            Image.file(
-              File(state.image.value),
-            ).niku()
-              ..rounded(8)
-              ..shadows([
-                BoxShadow(
-                  offset: Offset(0, 8),
-                  color: Colors.black.withOpacity(.125),
-                  blurRadius: 24,
-                ),
-              ])
-              ..maxWidth(560)
-              ..px(24)
-              ..mb(28),
-            NikuText(catType)..fontSize(32),
-            isCat
-                ? NikuButton.elevated(
-                    NikuText("Save cat")
-                      ..fontSize(21)
-                      ..w500(),
-                  )
-                    .px(36)
-                    .py(12)
-                    .shadow(Colors.transparent)
-                    .onPressed(() {})
-                    .niku()
-                    .mt(28)
-                : Niku(),
-          ])
-            ..mb(24);
-        }),
-      ]).justifyCenter().itemsCenter().niku()
-        ..fullWidth(),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Form(
+            key: formKey,
+            child: NikuColumn([
+              Obx(
+                () => NikuColumn([
+                  Image.file(
+                    File(state.image.value),
+                  ).niku()
+                    ..rounded(8)
+                    ..shadows([
+                      BoxShadow(
+                        offset: Offset(0, 8),
+                        color: Colors.black.withOpacity(.125),
+                        blurRadius: 24,
+                      ),
+                    ])
+                    ..maxWidth(560)
+                    ..maxHeight(size.height / 2)
+                    ..mb(36),
+                  NikuTextField("Cat Name")
+                    ..controller(nameController)
+                    ..fontSize(18)
+                    ..b(InputBorder.none)
+                    ..validator((value) {
+                      if (value == null || value.isEmpty)
+                        return "Cat need a name";
+                    }),
+                  NikuTextField("Cat type")
+                    ..controller(typeController)
+                    ..enabled(isCat)
+                    ..fontSize(18)
+                    ..initial(catType)
+                    ..b(InputBorder.none),
+                  NikuRow([
+                    NikuTextField("Age")
+                        .controller(ageController)
+                        .phoneKeyboard()
+                        .fontSize(18)
+                        .b(InputBorder.none)
+                        .niku()
+                          ..flex(1),
+                    CheckboxListTile(
+                      title: const Text("Owned?"),
+                      value: owned.value,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (value) {
+                        owned.value = value!;
+                      },
+                    ).niku()
+                      ..flex(1),
+                  ]),
+                  if (isCat)
+                    NikuButton.elevated(
+                      NikuRow([
+                        NikuText("Save cat")
+                          ..fontSize(21)
+                          ..w500(),
+                        Icon(Icons.add) //
+                            .niku()
+                            .ml(8),
+                      ])
+                        ..justifyCenter(),
+                    ) //
+                        .onPressed(handleSubmit)
+                        .py(16)
+                        .shadow(Colors.transparent)
+                        .niku()
+                          ..fullWidth()
+                          ..mt(28),
+                ])
+                  ..mb(24),
+              ),
+            ]) //
+                .justifyCenter()
+                .itemsCenter()
+                .niku()
+                  ..fullWidth()
+                  ..px(36),
+          ),
+        ),
+      ),
     );
   }
 }

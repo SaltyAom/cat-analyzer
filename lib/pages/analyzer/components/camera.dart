@@ -12,59 +12,51 @@ import 'package:niku/niku.dart';
 import 'package:camera/camera.dart';
 
 class Camera extends HookWidget {
-  late CameraController? controller;
+  const Camera({Key? key}) : super(key: key);
 
-  Camera({Key? key}) : super(key: key);
-
-  Future<bool> initCamera() async {
+  Future<CameraController?> initCamera() async {
     final cameras = await availableCameras();
 
-    if (cameras.length == 0) return false;
+    if (cameras.length == 0) return null;
 
-    controller = CameraController(
+    final controller = CameraController(
       cameras.first,
       ResolutionPreset.high,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
-    await controller?.initialize();
+    await controller.initialize();
 
-    return true;
-  }
-
-  void dispose() async {
-    controller?.dispose();
+    return controller;
   }
 
   @override
   Widget build(BuildContext context) {
+    final cameraState = useState<CameraController?>(null);
     final cameraAvailable = useState(false);
     final state = Get.find<AnalyzerPageState>();
 
     useEffect(() {
       Timer? interval;
+      CameraController? _controller;
 
-      initCamera().then((success) {
-        cameraAvailable.value = success;
+      initCamera().then((camera) {
+        cameraAvailable.value = camera != null;
 
-        if (!success) return null;
+        if (camera == null) return null;
 
         state.requestCapture.listen((_) async {
           interval?.cancel();
 
-          if (!success || controller == null) return null;
-
-          final image = await controller!.takePicture();
+          final image = await camera.takePicture();
           state.takeImage(image.path);
         });
 
         interval = Timer.periodic(
           Duration(milliseconds: 600),
           (timer) async {
-            if (controller == null) return null;
-
-            final image = await controller!.takePicture();
+            final image = await camera.takePicture();
 
             state.updateImage(image.path);
           },
@@ -73,17 +65,21 @@ class Camera extends HookWidget {
 
       return () {
         interval?.cancel();
-        dispose();
+
+        if (_controller != null) _controller.dispose();
       };
     }, []);
 
-    if (!cameraAvailable.value || controller == null) return Niku();
+    if (!cameraAvailable.value ||
+            cameraState.value == null ||
+            !cameraState.value!.value.isInitialized //
+        ) return Niku();
 
     return useMemoized(
-      () => CameraPreview(controller!).niku()
+      () => CameraPreview(cameraState.value!).niku()
         ..fullSize()
         ..bg(Colors.black),
-      [controller],
+      [cameraState.value],
     );
   }
 }

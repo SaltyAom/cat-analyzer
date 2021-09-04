@@ -1,3 +1,4 @@
+import 'package:cat/pages/preview/preview.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/instance_manager.dart';
@@ -7,6 +8,8 @@ import 'package:niku/niku.dart';
 
 import 'package:image_picker/image_picker.dart';
 
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 class CatImagePicker extends StatelessWidget {
   final ImagePicker picker = ImagePicker();
 
@@ -14,7 +17,10 @@ class CatImagePicker extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  VoidCallback createPickImageHandler(Function(String path) updateImage) =>
+  VoidCallback createPickImageHandler(
+    Function(String path) updateImage,
+    BuildContext context,
+  ) =>
       () async {
         final image = await picker.pickImage(
           source: ImageSource.gallery,
@@ -23,12 +29,17 @@ class CatImagePicker extends StatelessWidget {
         if (image == null) return;
 
         updateImage(image.path);
+
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (context) => PreviewPage(),
+        );
       };
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     final state = Get.find<AnalyzerPageState>();
-    final pickImage = createPickImageHandler(state.takeImage);
+    final pickImage = createPickImageHandler(state.takeImage, context);
 
     return NikuButton(
       Icon(

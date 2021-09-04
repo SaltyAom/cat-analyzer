@@ -1,4 +1,3 @@
-import 'package:cat/pages/gallery/gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,14 +6,18 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:cat/models/cat.dart';
 
+import 'package:cat/pages/home/home.dart';
+
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox<CatModel>('cat');
+  Hive.registerAdapter(CatModelAdapter());
 
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  static const Color darkThemeBackground = Color.fromRGBO(48, 48, 48, 1);
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -37,8 +40,25 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      darkTheme: ThemeData.dark().copyWith(
+        appBarTheme: AppBarTheme(
+          brightness: Brightness.light,
+          backwardsCompatibility: false,
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.light,
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: darkThemeBackground,
+            systemNavigationBarDividerColor: darkThemeBackground,
+            systemNavigationBarIconBrightness: Brightness.light,
+          ),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
-      home: GalleryPage(),
+      home: HomePage(),
     );
   }
 }

@@ -1,37 +1,40 @@
 import 'package:flutter/material.dart';
 
+import 'package:cat/models/cat.dart';
+
 import 'package:niku/niku.dart';
 
-class CatPage extends StatefulWidget {
-  CatPage({Key? key}) : super(key: key);
+import 'package:get/get.dart';
 
-  @override
-  _CatPageState createState() => _CatPageState();
-}
+class CatPage extends StatelessWidget {
+  final CatModel cat;
 
-class _CatPageState extends State<CatPage> {
+  const CatPage(
+    this.cat, {
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-      ]),
+      appBar: AppBar(
+        title: Text(cat.name.capitalizeFirst!),
+      ),
       body: NikuColumn([
-        Image.network(
-                "https://www.rd.com/wp-content/uploads/2019/11/cat-10-e1573844975155-scaled.jpg",
-                fit: BoxFit.cover)
+        Image.memory(
+          cat.cover,
+          fit: BoxFit.cover,
+        ).niku()
+          ..aspectRatio(1 / 1),
+        NikuText(cat.name.capitalizeFirst!) //
+            .fontSize(32)
+            .w600()
             .niku()
-              ..aspectRatio(1 / 1),
-        NikuText("Godzilla").fontSize(30).w600().niku()
-          ..pt(30)
-          ..pb(4),
-        NikuText("Happy tofu eating cat").fontSize(18),
-        NikuColumn([
-          NikuText("Gender: Witchcoric & Demgirl").fontSize(18),
-          NikuText("Pronoun: Xe/Xir").fontSize(18),
-          NikuText("Vaccination Record").fontSize(18),
-        ]).itemsStart().niku()
-          ..p(24).fullWidth()
+              ..mt(24)
+              ..mb(8),
+        NikuText(cat.type)
+          ..fontSize(18)
+          ..color(Colors.grey.shade500),
       ]),
     );
   }

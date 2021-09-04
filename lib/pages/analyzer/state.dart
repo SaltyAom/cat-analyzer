@@ -27,8 +27,6 @@ class AnalyzerPageState extends GetxController {
 
   Future<void> takeImage(String path) async {
     await updateImage(path);
-
-    Get.to(previewPage);
   }
 
   Future<void> predict() async {
