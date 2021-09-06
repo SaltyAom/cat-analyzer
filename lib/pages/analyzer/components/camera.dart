@@ -49,8 +49,6 @@ class Camera extends HookWidget {
         cameraState.value = camera;
 
         state.requestCapture.listen((_) async {
-          interval?.cancel();
-
           final image = await camera.takePicture();
           state.takeImage(image.path);
         });
@@ -58,6 +56,8 @@ class Camera extends HookWidget {
         interval = Timer.periodic(
           Duration(milliseconds: 600),
           (timer) async {
+            if (camera.value.isTakingPicture) return null;
+
             final image = await camera.takePicture();
 
             state.updateImage(image.path);

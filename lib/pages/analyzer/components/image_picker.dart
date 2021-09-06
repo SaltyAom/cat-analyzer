@@ -32,7 +32,7 @@ class CatImagePicker extends StatelessWidget {
 
         showCupertinoModalBottomSheet(
           context: context,
-          builder: (context) => PreviewPage(),
+          builder: (context) => const PreviewPage(),
         );
       };
 

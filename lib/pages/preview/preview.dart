@@ -13,11 +13,10 @@ import 'package:niku/niku.dart';
 import 'package:hive/hive.dart';
 
 class PreviewPage extends HookWidget {
+  const PreviewPage({Key? key}) : super(key: key);
+
   @override
   build(context) {
-    final mediaQuery = MediaQuery.of(context);
-    final size = mediaQuery.size;
-
     final state = Get.find<AnalyzerPageState>();
     final isCat = state.confidence.value > 0.6;
     final catType = isCat ? state.catType.value : "Not cat";
@@ -74,7 +73,6 @@ class PreviewPage extends HookWidget {
                       ),
                     ])
                     ..maxWidth(560)
-                    ..maxHeight(size.height / 2)
                     ..mb(36),
                 ),
                 useMemoized(
