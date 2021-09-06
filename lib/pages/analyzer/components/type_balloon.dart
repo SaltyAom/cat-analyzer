@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'package:cat/pages/analyzer/state.dart';
@@ -14,8 +16,8 @@ class TypeBalloon extends StatelessWidget {
 
   TypeBalloon({Key? key}) : super(key: key);
 
-  predict(String image, Function(String newState) updateState) {
-    final prediction = classifier.predict(image);
+  predict(Uint8List buffer, Function(String newState) updateState) async {
+    final prediction = await classifier.predict(buffer);
 
     final String label = prediction.label;
     final double confidence = prediction.score;

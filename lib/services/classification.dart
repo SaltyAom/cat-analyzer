@@ -1,5 +1,7 @@
 import 'dart:math';
-import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart' show compute;
 
 import 'package:image/image.dart' as img;
 
@@ -75,13 +77,12 @@ abstract class Classifier {
         .process(_inputImage);
   }
 
-  Category predict(String path) {
+  Category predict(Uint8List path) {
     final pres = DateTime.now().millisecondsSinceEpoch;
-    final imageInput = File(path).readAsBytesSync();
-    final image = img.decodeImage(imageInput)!;
+    final image = img.decodeImage(path.toList());
 
     _inputImage = TensorImage(_inputType);
-    _inputImage.loadImage(image);
+    _inputImage.loadImage(image!);
     _inputImage = _preProcess();
     final pre = DateTime.now().millisecondsSinceEpoch - pres;
 
@@ -94,8 +95,9 @@ abstract class Classifier {
     print('Time to run inference: $run ms');
 
     Map<String, double> labeledProb = TensorLabel.fromList(
-            labels, _probabilityProcessor.process(_outputBuffer))
-        .getMapWithFloatValue();
+      labels,
+      _probabilityProcessor.process(_outputBuffer),
+    ).getMapWithFloatValue();
     final pred = getTopProbability(labeledProb);
 
     return Category(pred.key, pred.value);

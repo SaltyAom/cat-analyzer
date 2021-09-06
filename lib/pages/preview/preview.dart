@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cat/models/cat.dart';
 import 'package:cat/pages/home/home.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +38,7 @@ class PreviewPage extends HookWidget {
           type: typeController.value.text,
           age: int.tryParse(ageController.value.text) ?? 0,
           owned: owned.value,
-          cover: await File(state.image.value).readAsBytes(),
+          cover: state.image.value,
         ),
       );
 
@@ -61,8 +59,8 @@ class PreviewPage extends HookWidget {
             child: NikuColumn([
               NikuColumn([
                 Obx(
-                  () => Image.file(
-                    File(state.image.value),
+                  () => Image.memory(
+                    state.image.value,
                   ).niku()
                     ..rounded(8)
                     ..shadows([

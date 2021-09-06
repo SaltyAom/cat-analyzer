@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
 
 import 'package:cat/services/classification.dart';
@@ -9,7 +12,7 @@ class AnalyzerPageState extends GetxController {
   final previewPage = PreviewPage();
 
   var catType = ''.obs;
-  var image = ''.obs;
+  var image = Uint8List.fromList([]).obs;
   var confidence = 0.0.obs;
   var requestCapture = 0.obs;
 
@@ -19,18 +22,20 @@ class AnalyzerPageState extends GetxController {
 
   void requestCaptureImage() => ++requestCapture;
 
-  Future<void> updateImage(String path) async {
-    image.value = path;
+  Future<void> updateImage(Uint8List buffer) async {
+    image.value = buffer;
 
     await predict();
   }
 
   Future<void> takeImage(String path) async {
-    await updateImage(path);
+    final buffer = File(path).readAsBytesSync();
+
+    await updateImage(buffer);
   }
 
   Future<void> predict() async {
-    final prediction = classifier.predict(image.value);
+    final prediction = await classifier.predict(image.value);
 
     print("Prediction $prediction");
 

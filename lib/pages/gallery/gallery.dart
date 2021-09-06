@@ -45,7 +45,7 @@ class GalleryPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Neko Desuyo"),
+        title: Text("Cat Analyzer"),
         centerTitle: false,
         actions: [
           IconButton(
