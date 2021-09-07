@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -35,6 +36,17 @@ abstract class Classifier {
 
   Classifier({int? numThreads}) {
     _interpreterOptions = InterpreterOptions();
+
+    if (Platform.isAndroid) {
+      final gpuDelegateV2 = GpuDelegateV2(
+        options: GpuDelegateOptionsV2(
+          isPrecisionLossAllowed: true,
+          maxDelegatePartitions: 2,
+        ),
+      );
+
+      _interpreterOptions = _interpreterOptions..addDelegate(gpuDelegateV2);
+    }
 
     if (numThreads != null) {
       _interpreterOptions.threads = numThreads;
@@ -87,11 +99,11 @@ abstract class Classifier {
     final pre = DateTime.now().millisecondsSinceEpoch - pres;
 
     print('Time to load image: $pre ms');
-
     final runs = DateTime.now().millisecondsSinceEpoch;
-    interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
-    final run = DateTime.now().millisecondsSinceEpoch - runs;
 
+    interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
+
+    final run = DateTime.now().millisecondsSinceEpoch - runs;
     print('Time to run inference: $run ms');
 
     Map<String, double> labeledProb = TensorLabel.fromList(

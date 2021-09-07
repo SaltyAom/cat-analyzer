@@ -35,7 +35,7 @@ class AnalyzerPageState extends GetxController {
   }
 
   Future<void> predict() async {
-    final prediction = await classifier.predict(image.value);
+    final prediction = classifier.predict(image.value);
 
     print("Prediction $prediction");
 

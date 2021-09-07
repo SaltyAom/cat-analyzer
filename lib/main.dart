@@ -12,7 +12,9 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(CatModelAdapter());
 
-  runApp(MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+    (value) => runApp(MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {

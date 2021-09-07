@@ -19,36 +19,34 @@ class CameraButton extends StatelessWidget {
     final state = Get.find<AnalyzerPageState>();
     final captureImage = createPickImageHandler(state.requestCaptureImage);
 
-    return NikuStack(
-      [
-        NikuButton(Niku())
-            .onPressed(captureImage)
-            .splash(Colors.transparent)
-            .niku()
-            .size(72, 72)
-            .bg(Colors.white)
-            .rounded()
-            .bottomCenter()
-            .builder(
-              (child) => SafeArea(
-                child: child,
-              ),
-            )
-            .mb(16),
-        NikuButton.outlined(Niku())
-            .bc(Colors.black)
-            .rounded()
-            .niku()
-            .size(60, 60)
-            .bottomCenter()
-            .builder(
-              (child) => SafeArea(
-                child: child,
-              ),
-            )
-            .ignorePointer()
-            .mb(22),
-      ],
-    );
+    return NikuStack([
+      NikuButton(Niku())
+          .onPressed(captureImage)
+          .splash(Colors.transparent)
+          .niku()
+          .size(72, 72)
+          .bg(Colors.white)
+          .rounded()
+          .bottomCenter()
+          .builder(
+            (child) => SafeArea(
+              child: child,
+            ),
+          )
+          .mb(16),
+      NikuButton.outlined(Niku())
+          .bc(Colors.black)
+          .rounded()
+          .niku()
+          .size(60, 60)
+          .bottomCenter()
+          .builder(
+            (child) => SafeArea(
+              child: child,
+            ),
+          )
+          .ignorePointer()
+          .mb(22),
+    ]);
   }
 }

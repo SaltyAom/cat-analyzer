@@ -13,12 +13,12 @@ import 'package:cat/models/cat.dart';
 
 class GalleryPage extends HookWidget {
   final VoidCallback toAnalyze;
-  final VoidCallback toProfile;
+  // final VoidCallback toProfile;
 
   const GalleryPage({
     Key? key,
     required this.toAnalyze,
-    required this.toProfile,
+    // required this.toProfile,
   }) : super(key: key);
 
   @override
@@ -54,17 +54,17 @@ class GalleryPage extends HookWidget {
               Icons.search,
             ),
           ),
-          CircleAvatar(
-            backgroundColor: Colors.grey.shade300,
-          ).niku()
-            ..mr(12)
-            ..on(tap: toProfile)
-            ..builder(
-              (child) => Transform.scale(
-                scale: .9,
-                child: child,
-              ),
-            ),
+          // CircleAvatar(
+          //   backgroundColor: Colors.grey.shade300,
+          // ).niku()
+          //   ..mr(12)
+          //   ..on(tap: toProfile)
+          //   ..builder(
+          //     (child) => Transform.scale(
+          //       scale: .9,
+          //       child: child,
+          //     ),
+          //   ),
         ],
       ),
       body: GridView.count(
@@ -83,6 +83,7 @@ class GalleryPage extends HookWidget {
                 cat.cover,
                 fit: BoxFit.cover,
               ).niku()
+                ..heroTag("${cat.name} Image")
                 ..aspectRatio(3 / 4),
               Niku()
                 ..boxDecoration(
@@ -106,10 +107,13 @@ class GalleryPage extends HookWidget {
                     .w600()
                     .color(Colors.white)
                     .niku()
+                      ..heroTag("${cat.name} Name")
                       ..mb(4),
                 NikuText(cat.type) //
                     .fontSize(16)
                     .color(Colors.grey.shade400)
+                    .niku()
+                      ..heroTag("${cat.name} Type")
               ]).justifyEnd().itemsStart().niku()
                 ..p(16)
             ]),

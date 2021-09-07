@@ -17,7 +17,7 @@ class TypeBalloon extends StatelessWidget {
   TypeBalloon({Key? key}) : super(key: key);
 
   predict(Uint8List buffer, Function(String newState) updateState) async {
-    final prediction = await classifier.predict(buffer);
+    final prediction = classifier.predict(buffer);
 
     final String label = prediction.label;
     final double confidence = prediction.score;

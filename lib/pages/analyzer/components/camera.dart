@@ -51,25 +51,31 @@ class Camera extends HookWidget {
         cameraState.value = camera;
         bool allow = true;
 
+        var runImageStream = () async {};
+
         final handleImagePreview = (CameraImage image) async {
           if (!allow || camera.value.isTakingPicture) return null;
           allow = false;
+
+          await camera.stopImageStream();
 
           final plane = image.planes[0].bytes;
 
           await state.updateImage(plane);
 
-          Future.delayed(Duration(milliseconds: 600), () {
+          Future.delayed(Duration(seconds: 1), () async {
+            await runImageStream();
             allow = true;
           });
         };
 
-        camera.startImageStream(handleImagePreview);
+        runImageStream = () async {
+          await camera.startImageStream(handleImagePreview);
+        };
 
         state.requestCapture.listen((_) async {
           if (camera.value.isTakingPicture) return null;
-
-          await camera.stopImageStream();
+          if (camera.value.isStreamingImages) await camera.stopImageStream();
 
           final image = await camera.takePicture();
           await state.takeImage(image.path);
@@ -79,8 +85,10 @@ class Camera extends HookWidget {
             builder: (context) => PreviewPage(),
           );
 
-          camera.startImageStream(handleImagePreview);
+          runImageStream();
         });
+
+        runImageStream();
       });
 
       return () {
@@ -97,8 +105,15 @@ class Camera extends HookWidget {
         cameraState.value == null ||
         !cameraState.value!.value.isInitialized) return Niku();
 
-    return CameraPreview(cameraState.value!).niku()
-      ..fullSize()
-      ..bg(Colors.black);
+    return useMemoized(
+      () => CameraPreview(cameraState.value!).niku()
+        ..aspectRatio(
+          cameraState.value!.value.previewSize!.height /
+              cameraState.value!.value.previewSize!.width,
+        )
+        ..center()
+        ..bg(Colors.black),
+      [cameraState.value],
+    );
   }
 }
