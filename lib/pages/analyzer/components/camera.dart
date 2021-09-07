@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:cat/pages/preview/preview.dart';
 import 'package:flutter/material.dart';
 
-import 'package:get/instance_manager.dart';
+import 'package:get/get.dart';
 import 'package:cat/pages/analyzer/state.dart';
 
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:niku/niku.dart';
 
@@ -23,7 +22,7 @@ class Camera extends HookWidget {
 
     final controller = CameraController(
       cameras.first,
-      ResolutionPreset.low,
+      ResolutionPreset.high,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
@@ -80,15 +79,12 @@ class Camera extends HookWidget {
           final image = await camera.takePicture();
           await state.takeImage(image.path);
 
-          showCupertinoModalBottomSheet(
-            context: context,
-            builder: (context) => PreviewPage(),
-          );
+          Get.to(() => PreviewPage());
 
           runImageStream();
         });
 
-        runImageStream();
+        // runImageStream();
       });
 
       return () {

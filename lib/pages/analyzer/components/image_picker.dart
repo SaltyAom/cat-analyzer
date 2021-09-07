@@ -1,14 +1,12 @@
 import 'package:cat/pages/preview/preview.dart';
 import 'package:flutter/material.dart';
 
-import 'package:get/instance_manager.dart';
+import 'package:get/get.dart';
 import 'package:cat/pages/analyzer/state.dart';
 
 import 'package:niku/niku.dart';
 
 import 'package:image_picker/image_picker.dart';
-
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class CatImagePicker extends StatelessWidget {
   final ImagePicker picker = ImagePicker();
@@ -30,10 +28,7 @@ class CatImagePicker extends StatelessWidget {
 
         updateImage(image.path);
 
-        showCupertinoModalBottomSheet(
-          context: context,
-          builder: (context) => const PreviewPage(),
-        );
+        Get.to(() => PreviewPage());
       };
 
   @override

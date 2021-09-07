@@ -25,7 +25,7 @@ class AnalyzerPageState extends GetxController {
   Future<void> updateImage(Uint8List buffer) async {
     image.value = buffer;
 
-    await predict();
+    predict();
   }
 
   Future<void> takeImage(String path) async {
@@ -34,7 +34,7 @@ class AnalyzerPageState extends GetxController {
     await updateImage(buffer);
   }
 
-  Future<void> predict() async {
+  predict() async {
     final prediction = classifier.predict(image.value);
 
     print("Prediction $prediction");

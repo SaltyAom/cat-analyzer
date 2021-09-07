@@ -49,7 +49,7 @@ class AnalyzerPage extends StatelessWidget {
           Camera(),
           CatImagePicker(),
           CameraButton(),
-          TypeBalloon(),
+          // TypeBalloon(),
         ]) //
             .niku()
             .bg(Colors.black)
