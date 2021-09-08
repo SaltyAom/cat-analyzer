@@ -1,17 +1,20 @@
 import 'dart:io';
 
-import 'package:cat/services/heroFlight.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-import 'package:cat/models/cat.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
+import 'package:cat/models/cat.dart';
 
 import 'package:niku/niku.dart';
 
 import 'package:get/get.dart';
 
-class CatPage extends StatelessWidget {
+import 'package:cat/pages/cat/in_depth.dart';
+import 'package:cat/pages/cat/info.dart';
+
+class CatPage extends HookWidget {
   final CatModel cat;
 
   const CatPage(
@@ -64,39 +67,42 @@ class CatPage extends StatelessWidget {
       };
 
   @override
-  Widget build(BuildContext context) {
+  build(context) {
+    final tab = useState(0);
+
+    final controller = useTabController(
+      initialLength: 2,
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(cat.name.capitalizeFirst!),
+        toolbarHeight: 64,
+        title: CupertinoSlidingSegmentedControl(
+          groupValue: tab.value,
+          children: {
+            0: NikuText("Info").fontSize(16).niku().py(8).px(16),
+            1: NikuText("In-depth").fontSize(16),
+          },
+          onValueChanged: (index) {
+            tab.value = int.parse(index.toString());
+            controller.animateTo(tab.value);
+          },
+        ),
         actions: [
           IconButton(
             onPressed: createDeleteHandler(cat.name),
             icon: Icon(
               Icons.delete_forever,
             ),
-          ).niku().tooltip("Remove cat")
+          ).niku()
+            ..tooltip("Remove cat")
         ],
       ),
-      body: NikuColumn([
-        Image.memory(
-          cat.cover,
-          fit: BoxFit.cover,
-        ).niku()
-          ..aspectRatio(1 / 1)
-          ..heroTag("${cat.name} Image"),
-        NikuText(cat.name.capitalizeFirst!) //
-            .fontSize(32)
-            .w600()
-            .niku()
-              ..builder(nikuHero("${cat.name} Name"))
-              ..mt(24)
-              ..mb(8),
-        NikuText(cat.type) //
-            .fontSize(18)
-            .color(Colors.grey.shade500)
-            .niku()
-              ..builder(nikuHero("${cat.name} Type"))
-      ]),
+      body: TabBarView(
+        controller: controller,
+        children: [CatInfo(cat), InDepthCat(cat)],
+        physics: NeverScrollableScrollPhysics(),
+      ),
     );
   }
 }
