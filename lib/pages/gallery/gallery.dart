@@ -1,3 +1,4 @@
+import 'package:cat/services/heroFlight.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -107,20 +108,22 @@ class GalleryPage extends HookWidget {
                     .w600()
                     .color(Colors.white)
                     .niku()
-                      ..heroTag("${cat.name} Name")
+                      ..builder(nikuHero("${cat.name} Name"))
                       ..mb(4),
                 NikuText(cat.type) //
                     .fontSize(16)
                     .color(Colors.grey.shade400)
                     .niku()
-                      ..heroTag("${cat.name} Type")
+                      ..builder(nikuHero("${cat.name} Type"))
               ]).justifyEnd().itemsStart().niku()
                 ..p(16)
             ]),
           ).niku()
             ..rounded(8)
-            ..on(tap: () {
-              Get.to(() => CatPage(cat));
+            ..on(tap: () async {
+              final catPage = await createCatPage(cat);
+
+              Get.to(catPage);
             });
         }),
       ).niku()
@@ -128,4 +131,8 @@ class GalleryPage extends HookWidget {
         ..pt(12),
     );
   }
+
+  Future<Widget> createCatPage(CatModel cat) => Future.microtask(
+        () => CatPage(cat),
+      );
 }
