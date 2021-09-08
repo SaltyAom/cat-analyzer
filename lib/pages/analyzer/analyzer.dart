@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:get/instance_manager.dart';
 
@@ -8,7 +9,7 @@ import 'package:niku/niku.dart';
 import './state.dart';
 import './components/components.dart';
 
-class AnalyzerPage extends StatelessWidget {
+class AnalyzerPage extends HookWidget {
   final VoidCallback scrollback;
 
   const AnalyzerPage(
@@ -20,12 +21,14 @@ class AnalyzerPage extends StatelessWidget {
   build(context) {
     Get.put(AnalyzerPageState());
 
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarBrightness: Brightness.dark,
-      ),
-    );
+    useEffect(() {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarBrightness: Brightness.dark,
+        ),
+      );
+    }, []);
 
     return Scaffold(
       body: NikuColumn([

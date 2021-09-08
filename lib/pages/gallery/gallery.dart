@@ -1,5 +1,6 @@
-import 'package:cat/services/heroFlight.dart';
+import 'package:cat/pages/gallery/components/card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 
@@ -25,24 +26,35 @@ class GalleryPage extends HookWidget {
   @override
   build(context) {
     final cats = useState<List<CatModel>>([]);
+    final isInit = useState(false);
+
+    updateCat() async {
+      final box = await Hive.openBox<CatModel>('cat');
+
+      final localCats = box.toMap();
+      final catsKey = localCats.keys;
+
+      final List<CatModel> catsList = [];
+      [...catsKey].forEach((cat) {
+        final _cat = localCats[cat];
+
+        if (_cat != null) catsList.insert(0, _cat);
+      });
+
+      cats.value = catsList;
+    }
 
     useEffect(() {
-      (() async {
-        final box = await Hive.openBox<CatModel>('cat');
-
-        final localCats = box.toMap();
-        final catsKey = localCats.keys;
-
-        final List<CatModel> catsList = [];
-        [...catsKey].forEach((cat) {
-          final _cat = localCats[cat];
-
-          if (_cat != null) catsList.insert(0, _cat);
-        });
-
-        cats.value = catsList;
-      })();
+      updateCat().then((_) {
+        isInit.value = true;
+      });
     }, []);
+
+    createToCatPageHandler(int index) => () async {
+          final catPage = await createCatPage(cats.value[index], updateCat);
+
+          Get.to(catPage);
+        };
 
     return Scaffold(
       appBar: AppBar(
@@ -68,71 +80,69 @@ class GalleryPage extends HookWidget {
           //   ),
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 3 / 5,
-        children: List.generate(cats.value.length, (index) {
-          final cat = cats.value[index];
+      body: cats.value.length > 0
+          ? GridView.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 3 / 5,
+              children: List.generate(cats.value.length, (index) {
+                final cat = cats.value[index];
 
-          return Container(
-            key: key,
-            color: Colors.black,
-            child: NikuStack([
-              Image.memory(
-                cat.cover,
-                fit: BoxFit.cover,
-              ).niku()
-                ..heroTag("${cat.name} Image")
-                ..aspectRatio(3 / 4),
-              Niku()
-                ..boxDecoration(
-                  BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0, 0.5, 0.9],
-                      colors: [
-                        Colors.transparent,
-                        Colors.transparent,
-                        Colors.black,
-                      ],
-                    ),
-                  ),
+                return CatCard(
+                  cat,
+                  toCatPage: createToCatPageHandler(index),
+                  index: index,
+                );
+              }),
+            ) //
+              .niku()
+              .px(12)
+              .pt(12)
+          : NikuColumn([
+              if (isInit.value) ...[
+                SvgPicture.asset(
+                  'assets/cat.svg',
+                ) //
+                    .niku()
+                    .fullWidth()
+                    .aspectRatio(2 / 1),
+                NikuText(
+                  "Welcome to Cat Analyzer!\nAn app to get to know more of your cats!\nSimply start scan your cat to get start!",
                 )
-                ..aspectRatio(7 / 10),
-              NikuColumn([
-                NikuText(cat.name.capitalizeFirst!) //
-                    .fontSize(18)
-                    .w600()
-                    .color(Colors.white)
-                    .niku()
-                      ..builder(nikuHero("${cat.name} Name"))
-                      ..mb(4),
-                NikuText(cat.type) //
                     .fontSize(16)
-                    .color(Colors.grey.shade400)
+                    .color(Colors.grey.shade700)
+                    .center()
+                    .height(1.5)
                     .niku()
-                      ..builder(nikuHero("${cat.name} Type"))
-              ]).justifyEnd().itemsStart().niku()
-                ..p(16)
-            ]),
-          ).niku()
-            ..rounded(8)
-            ..on(tap: () async {
-              final catPage = await createCatPage(cat);
-
-              Get.to(catPage);
-            });
-        }),
-      ).niku()
-        ..px(12)
-        ..pt(12),
+                      ..my(32),
+                NikuButton.elevated(
+                  NikuText("Scan your cat!")
+                    ..fontSize(18)
+                    ..w600(),
+                )
+                  ..onPressed(toAnalyze)
+                  ..px(28)
+                  ..py(16),
+              ]
+            ]) //
+              .justifyCenter()
+              .itemsCenter()
+              .niku()
+              .fullHeight()
+              .maxWidth(640)
+              .px(20),
     );
   }
 
-  Future<Widget> createCatPage(CatModel cat) => Future.microtask(
-        () => CatPage(cat),
+  Future<Widget> createCatPage(CatModel cat, Function updateCat) =>
+      Future.microtask(
+        () => WillPopScope(
+            child: CatPage(cat),
+            onWillPop: () async {
+              await updateCat();
+
+              return true;
+            }),
       );
 }

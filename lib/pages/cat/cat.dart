@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cat/pages/home/home.dart';
 import 'package:cat/services/heroFlight.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class CatPage extends StatelessWidget {
           Platform.isIOS
               ? CupertinoAlertDialog(
                   title: Text("Remove cat"),
-                  content: Text("Are you sure you want to remove this cat?"),
+                  content: Text("Are you to remove this cat?"),
                   actions: [
                     CupertinoButton(
                       child: Text("No"),
@@ -42,7 +41,7 @@ class CatPage extends StatelessWidget {
                 )
               : AlertDialog(
                   title: Text("Remove cat"),
-                  content: Text("Are you sure you want to remove this cat?"),
+                  content: Text("Are you sure to remove this cat?"),
                   actions: [
                     NikuButton(Text("No"))
                       ..onPressed(() {
@@ -60,7 +59,8 @@ class CatPage extends StatelessWidget {
 
         await box.delete(key);
 
-        Get.offAll(HomePage());
+        Get.back();
+        Navigator.of(Get.context!).maybePop();
       };
 
   @override

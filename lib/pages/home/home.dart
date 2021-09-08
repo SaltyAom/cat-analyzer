@@ -16,17 +16,19 @@ class HomePage extends HookWidget {
       initialIndex: 1,
     );
 
+    toAnalyze() {
+      controller.animateTo(0);
+    }
+
+    toGallery() {
+      controller.animateTo(1);
+    }
+
     return TabBarView(
       controller: controller,
       children: [
-        AnalyzerPage(() {
-          controller.animateTo(1);
-        }),
-        GalleryPage(
-          toAnalyze: () {
-            controller.animateTo(0);
-          },
-        ),
+        AnalyzerPage(toGallery),
+        GalleryPage(toAnalyze: toAnalyze),
       ],
     );
   }
