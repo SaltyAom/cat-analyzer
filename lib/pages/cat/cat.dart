@@ -80,7 +80,11 @@ class CatPage extends HookWidget {
         title: CupertinoSlidingSegmentedControl(
           groupValue: tab.value,
           children: {
-            0: NikuText("Info").fontSize(16).niku().py(8).px(16),
+            0: NikuText("Info") //
+                .fontSize(16)
+                .niku()
+                .py(8)
+                .px(16),
             1: NikuText("In-depth").fontSize(16),
           },
           onValueChanged: (index) {

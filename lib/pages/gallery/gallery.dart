@@ -15,18 +15,23 @@ import 'package:cat/models/cat.dart';
 
 class GalleryPage extends HookWidget {
   final VoidCallback toAnalyze;
-  // final VoidCallback toProfile;
 
   const GalleryPage({
     Key? key,
     required this.toAnalyze,
-    // required this.toProfile,
   }) : super(key: key);
 
   @override
   build(context) {
     final cats = useState<List<CatModel>>([]);
     final isInit = useState(false);
+
+    final discoveredCats = <CatModel>[];
+    final ownedCats = cats.value.where((cat) {
+      if (!cat.owned) discoveredCats.add(cat);
+
+      return cat.owned;
+    }).toList();
 
     updateCat() async {
       final box = await Hive.openBox<CatModel>('cat');
@@ -61,44 +66,84 @@ class GalleryPage extends HookWidget {
         title: Text("Cat Analyzer"),
         centerTitle: false,
         actions: [
-          IconButton(
-            onPressed: toAnalyze,
-            icon: Icon(
-              Icons.search,
-            ),
-          ),
-          // CircleAvatar(
-          //   backgroundColor: Colors.grey.shade300,
-          // ).niku()
-          //   ..mr(12)
-          //   ..on(tap: toProfile)
-          //   ..builder(
-          //     (child) => Transform.scale(
-          //       scale: .9,
-          //       child: child,
-          //     ),
-          //   ),
+          NikuButton(
+            NikuRow([
+              Icon(Icons.camera_alt_rounded).niku()..mr(8),
+              NikuText("Scan")..fontSize(18),
+            ]) //
+                .itemsCenter()
+                .niku()
+                  ..px(12),
+          )..onPressed(toAnalyze)
         ],
       ),
       body: cats.value.length > 0
-          ? GridView.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 3 / 5,
-              children: List.generate(cats.value.length, (index) {
-                final cat = cats.value[index];
+          ? NikuColumn([
+              if (ownedCats.length > 0) ...[
+                NikuText("Your cats") //
+                    .fontSize(21)
+                    .w600()
+                    .alignLeft()
+                    .niku()
+                      ..centerLeft()
+                      ..pl(16),
+                GridView.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 3 / 5,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: List.generate(ownedCats.length, (index) {
+                    final cat = ownedCats[index];
 
-                return CatCard(
-                  cat,
-                  toCatPage: createToCatPageHandler(index),
-                  index: index,
-                );
-              }),
-            ) //
+                    return CatCard(
+                      cat,
+                      toCatPage: createToCatPageHandler(
+                        cats.value.indexOf(cat),
+                      ),
+                      index: index,
+                    );
+                  }),
+                ) //
+                    .niku()
+                      ..px(12)
+                      ..pt(12),
+              ],
+              if (discoveredCats.length > 0) ...[
+                NikuText("Discovered") //
+                    .fontSize(21)
+                    .w600()
+                    .alignLeft()
+                    .niku()
+                      ..centerLeft()
+                      ..pl(16),
+                GridView.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 3 / 5,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: List.generate(discoveredCats.length, (index) {
+                    final cat = discoveredCats[index];
+
+                    return CatCard(
+                      cat,
+                      toCatPage: createToCatPageHandler(
+                        cats.value.indexOf(cat),
+                      ),
+                      index: ownedCats.length + index,
+                    );
+                  }),
+                ).niku()
+                  ..px(12)
+                  ..pt(12),
+              ],
+            ]) //
               .niku()
-              .px(12)
               .pt(12)
+              .scrollable()
           : NikuColumn([
               if (isInit.value) ...[
                 SvgPicture.asset(

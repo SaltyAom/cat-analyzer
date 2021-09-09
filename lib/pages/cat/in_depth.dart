@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:niku/niku.dart';
 import 'package:get/get.dart';
+
+import 'package:flutter_svg/svg.dart';
 
 import 'package:cat/models/cat.dart';
 
@@ -20,65 +24,65 @@ class InDepthCat extends StatelessWidget {
 
   @override
   build(context) {
-    // if (true)
-    //   return NikuColumn([
-    //     SvgPicture.asset(
-    //       'assets/chilling.svg',
-    //     ) //
-    //         .niku()
-    //         .fullWidth()
-    //         .aspectRatio(2 / 1),
-    //     NikuText(
-    //       "Get premium to get more of your cat.\nMore feature like using HealthKit with your cat to track their step, frequent location, graph visualization and more!",
-    //     ) //
-    //         .fontSize(16)
-    //         .color(Colors.grey.shade700)
-    //         .center()
-    //         .height(1.5)
-    //         .niku()
-    //           ..my(32)
-    //           ..px(24),
-    //     NikuButton.elevated(
-    //       NikuText("Go Premium")
-    //         ..fontSize(18)
-    //         ..w600(),
-    //     )
-    //       ..onPressed(() {
-    //         Get.dialog(
-    //           Platform.isIOS
-    //               ? CupertinoAlertDialog(
-    //                   title: Text("Coming Soon"),
-    //                   content: Text(
-    //                     "Premium feature is coming soon in the future and not availble on beta yet.",
-    //                   ),
-    //                   actions: [
-    //                     CupertinoButton(
-    //                       child: Text("Ok"),
-    //                       onPressed: () {
-    //                         Get.back();
-    //                       },
-    //                     ),
-    //                   ],
-    //                 )
-    //               : AlertDialog(
-    //                   title: Text("Remove cat"),
-    //                   content: Text(
-    //                     "Premium feature is coming soon in the future and not availble on beta yet.",
-    //                   ),
-    //                   actions: [
-    //                     NikuButton(Text("Ok"))
-    //                       ..onPressed(() {
-    //                         Get.back();
-    //                       }),
-    //                   ],
-    //                 ),
-    //         );
-    //       })
-    //       ..px(28)
-    //       ..py(16),
-    //   ])
-    //     ..justifyCenter()
-    //     ..itemsCenter();
+    if (true)
+      return NikuColumn([
+        SvgPicture.asset(
+          'assets/chilling.svg',
+        ) //
+            .niku()
+            .fullWidth()
+            .aspectRatio(2 / 1),
+        NikuText(
+          "Get premium to get more of your cat.\nMore feature like using HealthKit with your cat to track their step, frequent location, graph visualization and more!",
+        ) //
+            .fontSize(16)
+            .color(Colors.grey.shade700)
+            .center()
+            .height(1.5)
+            .niku()
+              ..my(32)
+              ..px(24),
+        NikuButton.elevated(
+          NikuText("Go Premium")
+            ..fontSize(18)
+            ..w600(),
+        )
+          ..onPressed(() {
+            Get.dialog(
+              Platform.isIOS
+                  ? CupertinoAlertDialog(
+                      title: Text("Coming Soon"),
+                      content: Text(
+                        "Premium feature is coming soon in the future and not availble on beta yet.",
+                      ),
+                      actions: [
+                        CupertinoButton(
+                          child: Text("Ok"),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                      ],
+                    )
+                  : AlertDialog(
+                      title: Text("Remove cat"),
+                      content: Text(
+                        "Premium feature is coming soon in the future and not availble on beta yet.",
+                      ),
+                      actions: [
+                        NikuButton(Text("Ok"))
+                          ..onPressed(() {
+                            Get.back();
+                          }),
+                      ],
+                    ),
+            );
+          })
+          ..px(28)
+          ..py(16),
+      ])
+        ..justifyCenter()
+        ..itemsCenter();
 
     final brightness = MediaQuery.of(context).platformBrightness;
 

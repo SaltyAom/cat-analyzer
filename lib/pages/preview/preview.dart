@@ -71,10 +71,11 @@ class PreviewPage extends HookWidget {
                       ),
                     ])
                     ..maxWidth(560)
+                    ..mt(16)
                     ..mb(36),
                 ),
                 useMemoized(
-                  () => NikuTextField("Cat Name")
+                  () => NikuTextField("Name")
                     ..controller(nameController)
                     ..fontSize(18)
                     ..b(InputBorder.none)
@@ -85,9 +86,8 @@ class PreviewPage extends HookWidget {
                   [nameController],
                 ),
                 useMemoized(
-                  () => NikuTextField("Cat type")
+                  () => NikuTextField("Breed")
                     ..controller(typeController)
-                    ..enabled(isCat)
                     ..fontSize(18)
                     ..initial(catType)
                     ..b(InputBorder.none),
@@ -115,24 +115,23 @@ class PreviewPage extends HookWidget {
                   ).niku()
                     ..flex(2),
                 ]),
-                if (isCat)
-                  NikuButton.elevated(
-                    NikuRow([
-                      NikuText("Save cat")
-                        ..fontSize(21)
-                        ..w500(),
-                      Icon(Icons.add) //
-                          .niku()
-                          .ml(8),
-                    ])
-                      ..justifyCenter(),
-                  ) //
-                      .onPressed(handleSubmit)
-                      .py(16)
-                      .shadow(Colors.transparent)
-                      .niku()
-                        ..fullWidth()
-                        ..mt(28),
+                NikuButton.elevated(
+                  NikuRow([
+                    NikuText("Save cat")
+                      ..fontSize(21)
+                      ..w500(),
+                    Icon(Icons.add) //
+                        .niku()
+                        .ml(8),
+                  ])
+                    ..justifyCenter(),
+                ) //
+                    .onPressed(handleSubmit)
+                    .py(16)
+                    .shadow(Colors.transparent)
+                    .niku()
+                      ..fullWidth()
+                      ..mt(28),
               ])
                 ..mb(24),
             ]) //

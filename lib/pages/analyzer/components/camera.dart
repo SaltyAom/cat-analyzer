@@ -39,8 +39,7 @@ class Camera extends HookWidget {
     final state = Get.find<AnalyzerPageState>();
 
     useEffect(() {
-      Timer? interval;
-      CameraController? _controller;
+      StreamSubscription<int>? cameraListener;
 
       initCamera().then((camera) {
         cameraAvailable.value = camera != null;
@@ -48,31 +47,8 @@ class Camera extends HookWidget {
         if (camera == null) return null;
 
         cameraState.value = camera;
-        bool allow = true;
 
-        var runImageStream = () async {};
-
-        final handleImagePreview = (CameraImage image) async {
-          if (!allow || camera.value.isTakingPicture) return null;
-          allow = false;
-
-          await camera.stopImageStream();
-
-          final plane = image.planes[0].bytes;
-
-          await state.updateImage(plane);
-
-          Future.delayed(Duration(seconds: 1), () async {
-            await runImageStream();
-            allow = true;
-          });
-        };
-
-        runImageStream = () async {
-          await camera.startImageStream(handleImagePreview);
-        };
-
-        state.requestCapture.listen((_) async {
+        cameraListener = state.requestCapture.listen((_) async {
           if (camera.value.isTakingPicture) return null;
           if (camera.value.isStreamingImages) await camera.stopImageStream();
 
@@ -80,20 +56,11 @@ class Camera extends HookWidget {
           await state.takeImage(image.path);
 
           Get.to(() => PreviewPage());
-
-          runImageStream();
         });
-
-        // runImageStream();
       });
 
       return () {
-        interval?.cancel();
-
-        if (_controller != null) {
-          _controller.stopImageStream();
-          _controller.dispose();
-        }
+        cameraListener?.cancel();
       };
     }, []);
 

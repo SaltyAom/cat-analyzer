@@ -33,6 +33,7 @@ class AnalyzerPage extends HookWidget {
     return Scaffold(
       body: NikuColumn([
         NikuStack([
+          Camera(),
           NikuButton.icon(
             Icon(
               Icons.close,
@@ -49,7 +50,6 @@ class AnalyzerPage extends HookWidget {
                   ),
                 )
                 ..topRight(),
-          Camera(),
           CatImagePicker(),
           CameraButton(),
           // TypeBalloon(),
