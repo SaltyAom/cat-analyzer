@@ -62,6 +62,8 @@ class CatInfo extends HookWidget {
           );
         };
 
+    final brightness = MediaQuery.of(context).platformBrightness;
+
     return NikuColumn([
       Image.memory(
         cat.cover,
@@ -91,11 +93,13 @@ class CatInfo extends HookWidget {
             title: "Age",
             data: "7 years",
             icon: Icons.cake,
+            brightness: brightness,
           ),
           createGridCard(
             title: "Owned",
             data: cat.owned ? "Owned" : "Founded",
             icon: Icons.check,
+            brightness: brightness,
           )
         ],
       ).niku()

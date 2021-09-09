@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 
 import 'package:niku/niku.dart';
 
-Niku Function(Widget child) cardStyle() => (child) => child.niku()
-  ..fullWidth()
-  ..p(16)
-  ..bg(Colors.white)
-  ..rounded(8)
-  ..shadows([
-    BoxShadow(
-      offset: Offset(0, 4),
-      blurRadius: 8,
-      color: Colors.black.withOpacity(.0875),
-    )
-  ])
-  ..my(8);
+Niku Function(Widget child) cardStyle(Brightness brightness) =>
+    (child) => child.niku()
+      ..fullWidth()
+      ..p(16)
+      ..bg(
+        brightness == Brightness.light
+            ? Colors.grey.shade200
+            : Colors.grey.shade800,
+      )
+      ..rounded(8)
+      ..my(8);
 
 createGridCard({
   required String title,
   required String data,
   required IconData icon,
+  required Brightness brightness,
 }) =>
     NikuColumn([
       NikuRow([
@@ -44,13 +43,14 @@ createGridCard({
         .justifyStart()
         .itemsStart()
         .niku()
-          ..builder(cardStyle())
+          ..builder(cardStyle(brightness))
           ..fullHeight();
 
 Widget createCard({
   required String title,
   required String data,
   required IconData icon,
+  required Brightness brightness,
 }) =>
     NikuColumn([
       NikuRow([
@@ -74,4 +74,4 @@ Widget createCard({
         .justifyStart()
         .itemsStart()
         .niku()
-          ..builder(cardStyle());
+          ..builder(cardStyle(brightness));
