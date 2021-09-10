@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cat/pages/cat/cat_image.dart';
+import 'package:cat/services/cat_wiki.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -15,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:cat/services/heroFlight.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import './styles.dart';
 
@@ -86,6 +88,12 @@ class CatInfo extends HookWidget {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         crossAxisSpacing: 16,
+        padding: EdgeInsets.only(
+          top: 24,
+          left: 16,
+          right: 16,
+          bottom: 0,
+        ),
         children: [
           createGridCard(
             title: "Age",
@@ -95,13 +103,26 @@ class CatInfo extends HookWidget {
           ),
           createGridCard(
             title: "Owned",
-            data: cat.owned ? "Owned" : "Founded",
-            icon: Icons.check,
+            data: cat.owned ? "Owned" : "Found",
+            icon: cat.owned ? Icons.check : Icons.clear_rounded,
             brightness: brightness,
           )
         ],
-      ).niku()
-        ..p(16),
+      ),
+      if (catWiki.containsKey(cat.type))
+        createCustomCard(
+          title: cat.type,
+          data: NikuText("Read more on Wikipedia").fontSize(18).niku()..mt(8),
+          icon: Icons.book_rounded,
+          brightness: brightness,
+        ).niku()
+          ..on(tap: () async {
+            final url = catWiki[cat.type];
+
+            if (await canLaunch(url!)) await launch(url);
+          })
+          ..px(16)
+          ..mt(8),
       NikuRow([
         Icon(
           Icons.image_outlined,
@@ -111,7 +132,8 @@ class CatInfo extends HookWidget {
       ]) //
           .itemsCenter()
           .niku()
-            ..px(16),
+            ..px(16)
+            ..mt(16),
       GridView.count(
         crossAxisCount: 3,
         shrinkWrap: true,

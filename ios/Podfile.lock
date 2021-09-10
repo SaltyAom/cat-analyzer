@@ -10,6 +10,8 @@ PODS:
     - Flutter
   - tflite_flutter_helper (0.0.1):
     - Flutter
+  - url_launcher (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - camera (from `.symlinks/plugins/camera/ios`)
@@ -18,6 +20,7 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - tflite_flutter (from `.symlinks/plugins/tflite_flutter/ios`)
   - tflite_flutter_helper (from `.symlinks/plugins/tflite_flutter_helper/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 EXTERNAL SOURCES:
   camera:
@@ -32,6 +35,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/tflite_flutter/ios"
   tflite_flutter_helper:
     :path: ".symlinks/plugins/tflite_flutter_helper/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
   camera: 3164201dc344383e62282964016528c4f5a9ad50
@@ -40,6 +45,7 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   tflite_flutter: 9157a660578930a99728974f247369af1c3595d5
   tflite_flutter_helper: 543b46b6bd064b21c92ea6e54bc0b29f1ce74cb5
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
 
 PODFILE CHECKSUM: 5b7bb732debf58e6748de3e96be10aaacc803498
 

@@ -24,6 +24,9 @@ class InDepthCat extends StatelessWidget {
 
   @override
   build(context) {
+    final brightness = MediaQuery.of(context).platformBrightness;
+    final isDarkTheme = brightness == Brightness.dark;
+
     if (true)
       return NikuColumn([
         SvgPicture.asset(
@@ -36,7 +39,7 @@ class InDepthCat extends StatelessWidget {
           "Get premium to get more of your cat.\nMore feature like using HealthKit with your cat to track their step, frequent location, graph visualization and more!",
         ) //
             .fontSize(16)
-            .color(Colors.grey.shade700)
+            .color(isDarkTheme ? Colors.grey.shade400 : Colors.grey.shade700)
             .center()
             .height(1.5)
             .niku()
@@ -83,8 +86,6 @@ class InDepthCat extends StatelessWidget {
       ])
         ..justifyCenter()
         ..itemsCenter();
-
-    final brightness = MediaQuery.of(context).platformBrightness;
 
     return NikuColumn([
       NikuText(cat.name.capitalizeFirst!) //

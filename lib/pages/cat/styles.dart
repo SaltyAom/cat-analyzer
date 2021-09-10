@@ -11,10 +11,9 @@ Niku Function(Widget child) cardStyle(Brightness brightness) =>
             ? Colors.grey.shade200
             : Colors.grey.shade800,
       )
-      ..rounded(8)
-      ..my(8);
+      ..rounded(8);
 
-createGridCard({
+Widget createGridCard({
   required String title,
   required String data,
   required IconData icon,
@@ -25,12 +24,14 @@ createGridCard({
         Icon(
           icon,
           color: Colors.grey.shade500,
-        ),
+        ).niku()
+          ..mr(4),
         NikuText(title)
           ..fontSize(16)
           ..w600()
           ..color(Colors.grey.shade500),
-      ]),
+      ])
+        ..itemsCenter(),
       NikuText(data) //
           .fontSize(32)
           .w600()
@@ -75,3 +76,28 @@ Widget createCard({
         .itemsStart()
         .niku()
           ..builder(cardStyle(brightness));
+
+Widget createCustomCard({
+  required String title,
+  required Widget data,
+  required IconData icon,
+  required Brightness brightness,
+}) =>
+    NikuColumn([
+      NikuRow([
+        Icon(
+          icon,
+          color: Colors.grey.shade500,
+        ),
+        NikuText(title)
+          ..fontSize(16)
+          ..w600()
+          ..color(Colors.grey.shade500),
+      ]),
+      data
+    ]) //
+        .justifyStart()
+        .itemsStart()
+        .niku()
+          ..builder(cardStyle(brightness))
+          ..my(8);
